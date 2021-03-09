@@ -46,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
         String is = i.getStringExtra("isOpen");
         if (is != null) {
             if (is.equalsIgnoreCase("Service")) {
-//            onPause();
-                //moveTaskToBack(true);
                 finish();
             }
         }
