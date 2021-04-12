@@ -50,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+            Log.e("data","data: "+Build.SERIAL);
+
+
         try {
             for (Intent intent : POWERMANAGER_INTENTS)
 
