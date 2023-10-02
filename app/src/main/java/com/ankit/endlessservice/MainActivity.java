@@ -2,6 +2,8 @@ package com.ankit.endlessservice;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,11 +13,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
 import com.ankit.endlessservice.services.EndlessService;
+import com.ankit.endlessservice.util.AlarmReceiver;
 
 import java.util.Date;
 
@@ -190,6 +194,17 @@ public class MainActivity extends AppCompatActivity {
             Intent startIntent = new Intent(MainActivity.this, EndlessService.class);
             startForegroundService(startIntent);
 
+            long intervalMillis = 10*1000; // 30 seconds
+            long alarmTriggerTime = SystemClock.elapsedRealtime() + intervalMillis;
+
+            Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+// Use setExact to schedule the alarm exactly every 30 seconds.
+            alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, alarmTriggerTime, pendingIntent);
+
         } else {
             Log.e("line no 214", "start service normal");
             Intent startIntent = new Intent(MainActivity.this, EndlessService.class);
@@ -217,5 +232,11 @@ public class MainActivity extends AppCompatActivity {
             Intent startIntent = new Intent(MainActivity.this, EndlessService.class);
             stopService(startIntent);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e("onDestroy","onDestroy");
     }
 }

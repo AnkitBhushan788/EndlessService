@@ -37,6 +37,7 @@ public class EndlessService extends Service {
     private static final String TAG =  EndlessService.class.getSimpleName();
     private Handler mHandler = new Handler();
     private Timer mTimer = null;
+    public  boolean isServiceRunning=false;
     Intent intent;
     //final long notify_interval = 1000 * 10 * 60;
     final long notify_interval = 1000 * 2;
@@ -47,6 +48,7 @@ public class EndlessService extends Service {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
 
+    int count=0;
     boolean isRunning = false;
     String batteryLevel;
     boolean isStop = true;
@@ -139,16 +141,20 @@ public class EndlessService extends Service {
             long diffDateTime = cDateTime - lDateTime;
             Log.e("val 1st", cDateTime + "::" + lDateTime + "::" + diffDateTime);
             if (sharedPreferences.getString("TimeStart", "").equalsIgnoreCase("start")) {
-                if (diffDateTime < 1000 * 60) {
-                    Log.e("retuen", "retuen val");
+                isServiceRunning=true;
+                if (diffDateTime < 1000 * 30) {
+                    Log.e("retuen", "retuen val::"+count);
 
                     return;
                 }
             }
 
-            editor.putString("TimeStart", "start");
-            editor.putLong("ldateTime", new Date().getTime());
-            editor.commit();
+
+                editor.putString("TimeStart", "start");
+                editor.putLong("ldateTime", new Date().getTime());
+                editor.commit();
+                count++;
+
 
 
         }
